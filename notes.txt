@@ -1,0 +1,28 @@
+
+Some examples of models available on Hugging Face
+
+	ASR - Automatic speech recognition (speech-to-text)
+
+	TTS - Text to speech
+
+Model Card - is like a README
+
+Back of the envelope calculation to determine memory requirements for a model
+
+	Search for pytorch_model.bin and multiply by 1.2, i.e., 20% more
+
+	This will be the memory requirements for you to run this model on a machine of your choice
+
+"transformers" library is the core library of huggingface
+
+While working with audio samples, ensure that you are using a model which is trained on the same sampling frequency as your dataset, otherwise you will not get correct results
+
+If it's spatial audio (stereo) you need to convert it to regular (mono) audio, because transformers cannot yet understand spatial data due to lack of data
+
+In classification you have one correct label, in ASR you have one correct transcription for a given utterance, however, for TTS, since we are converting from one-to-many, i.e., each word can be said in different ways, it's a challenging problem
+
+Object Detection is classification + localization. Object Detection can recognize multiple objects in a given image and that is why it has to do localization as well
+
+Image Segmentation: Users will pass 2d points on an image and the model will output mask of the object which contains the 2d point
+
+HuggingFace Hub: A place to host your models
