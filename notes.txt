@@ -13,6 +13,15 @@ Back of the envelope calculation to determine memory requirements for a model
 
 	This will be the memory requirements for you to run this model on a machine of your choice
 
+	Why paging doesn't save us
+
+		The issue isn't that paging can't work - it's that neural network inference has terrible memory access patterns for paging:
+
+		- Non-sequential access: During a forward pass, you're accessing weights across many layers, attention heads, and embedding dimensions. This isn't a linear scan - it's scattered reads across the entire model.
+		- Working set size: Unlike many programs where you only need a small "hot" portion of data, transformer inference touches a huge fraction of weights on every single token generation. Your working set is essentially the whole model.
+		- Latency multiplication: If generating one token requires 100 page faults, and each page fault costs ~10ms (SSD) or ~10μs (NVMe), you're looking at seconds per token. That's unusable for interactive inference.
+		- The attention problem: Self-attention over long contexts means you're reading/writing the KV cache constantly. If that's being paged in and out, you're thrashing on every attention computation.
+
 "transformers" library is the core library of huggingface
 
 While working with audio samples, ensure that you are using a model which is trained on the same sampling frequency as your dataset, otherwise you will not get correct results
